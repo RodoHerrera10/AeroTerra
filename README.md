@@ -1,2 +1,3 @@
 # AeroTerra
-EvaluaciÃ³n a solicitud de empleo
+Evaluación a solicitud de empleo
+Candidato: Rodolfo Herrera
