@@ -25,13 +25,13 @@ mapApp.initMap = function (callback) {
         mapApp.POIsLayer = new GraphicsLayer({ id: "circles" });
         mapApp.map.addLayer(mapApp.POIsLayer);
         mapApp.POIsSymbol = new SimpleMarkerSymbol({
-                "color": [230, 76, 0, 150],
-                "size": 12,
+                "color": [0, 128, 0, 100],
+                "size": 10,
                 "angle": -30,
                 "xoffset": 0,
                 "yoffset": 0,
                 "type": "esriSMS",
-                "style": "esriSMSCircle",
+                "style": "esriSMSSquare",
                 "outline": {
                     "color": [168, 0, 0, 255],
                     "width": 1,
@@ -58,3 +58,99 @@ mapApp.initMap(function () {
             });
     });
 });
+
+function ValidacionesPOI() {
+    var nombre = document.getElementById('Txt_Nombre');
+    var direccion = document.getElementById('Txt_Direccion');
+    var nroTelefono = document.getElementById('Lng_NroTelefono');
+    var coordenadas = document.getElementById('Txt_Coordenadas');
+    var categoria = document.getElementById('Cbo_Categorias');
+
+    var regNombre = /\d+$/g;
+    var regNroTelefono = /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/;
+
+    var error = document.querySelector('#Txt_Nombre + span.error');
+    error.textContent = "";
+
+    if (nombre.value == "" || regNombre.test(nombre.value)) {
+        error.textContent = "Por favor ingrese un nombre válido.";
+        nombre.focus();
+        return false;
+    }
+
+    var error = document.querySelector('#Txt_Direccion + span.error');
+    error.textContent = "";
+
+    if (direccion.value == "") {
+        error.textContent = "Por favor ingrese una dirección.";
+        direccion.focus();
+        return false;
+    }
+
+    var error = document.querySelector('#Lng_NroTelefono + span.error');
+    error.textContent = "";
+
+    if (nroTelefono.value == "" || !regNroTelefono.test(nroTelefono.value)) {
+        error.textContent = "Por favor ingrese un Nro de teléfono válido.";
+        nroTelefono.focus();
+        return false;
+    }
+
+    var error = document.querySelector('#Txt_Coordenadas + span.error');
+    error.textContent = "";
+
+    if (coordenadas.value == "") {
+        document.forms.PuntoDeInteres.Error.value = "Por favor ingrese las coordenadas.";
+        coordenadas.focus();
+        return false;
+    }
+    //Valido que se haya ingresado una coordenada antes de la coma
+
+    if (coordenadas.value.indexOf(',') <= 0) {
+        document.forms.PuntoDeInteres.Error.value = "Por favor ingrese las coordenadas.";
+        coordenadas.focus();
+        return false;
+    }
+    const listacoordenadas = coordenadas.value.split(',');
+
+    if (listacoordenadas.length != 2) {
+        error.textContent = "Por favor ingrese 2 coordenadas separadas por una ',' (coma).";
+        coordenadas.focus();
+        return false;
+    }
+
+    if (listacoordenadas[1] == "") {
+        error.textContent = "Por favor ingrese la coordenada Y.";
+        coordenadas.focus();
+        return false;
+    }
+
+    if (isNaN(listacoordenadas[0]) || isNaN(listacoordenadas[1])) {
+        error.textContent = "Por favor ingrese coordenadas numéricas.";
+        coordenadas.focus();
+        return false;
+    }
+
+    if (listacoordenadas[0] < -180 || listacoordenadas[0] > 180) {
+        error.textContent = "Por favor ingrese un valor entre -180 y 180 para la coordenada X.";
+        coordenadas.focus();
+        return false;
+    }
+
+    if (listacoordenadas[1] < -90 || listacoordenadas[1] > 90) {
+        error.textContent = "Por favor ingrese un valor entre -90 y 90 para la coordenada Y.";
+        coordenadas.focus();
+        return false;
+    }
+
+    var error = document.querySelector('#Cbo_Categorias + span.error');
+    error.textContent = "";
+
+    if (categoria.value == "") {
+        error.textContent = "Por favor seleccione una categoría.";
+        categoria.focus();
+        return false;
+    }
+
+    return true ;
+}

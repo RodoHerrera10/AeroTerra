@@ -51,8 +51,9 @@ namespace Asa.MapApi.Controllers
             switch (Request.HttpMethod)
             {
                 case "GET":
-                    var _POIs = new List<Dictionary<string, object>>();
-                    this._ListPOIS();
+                    var _POIs = new List<Object>();
+                    
+                    _POIs = this._ListPOIS();
 
                     return Json(new { pois = _POIs.ToArray() }, JsonRequestBehavior.AllowGet);
                 case "POST":
@@ -74,7 +75,8 @@ namespace Asa.MapApi.Controllers
         private List<Object> _ListPOIS()
         {
             var driver = new XlsDriver();
-            var conn = driver.Connect(@"C:\Users\rherrera\Documents\Otros\Aeroterra\homework-net-2K20-master\MapsTest\bin\Data\ds.xls");
+            string path = System.Web.Hosting.HostingEnvironment.MapPath(@"\bin\Data\ds.xls");
+            var conn = driver.Connect(path);
             conn.Open();
             var dt = driver.ListData(conn, "POIs");
 
@@ -89,7 +91,7 @@ namespace Asa.MapApi.Controllers
                 }
                 
                 data.Add(props);
-                return data;
+                //return data;
             }
             conn.Close();
             return data;
