@@ -58,72 +58,159 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form name="PuntoDeInteres" method="post" onsubmit="return ValidacionesPOI()">
-
-                    <div class="modal-body">
-                        <table>
-                            <tr>
-                                <td>
-                                    Nombre:
-                                </td>
-                                <td>
-                                    <input type="text" id="Txt_Nombre" maxlength="100"/>
-                                    <span class="error" aria-live="polite"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Dirección:</td>
-                                <td>
-                                    <input type="text" id="Txt_Direccion" maxlength="150"/>
-                                    <span class="error" aria-live="polite"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Número telefónico:</td>
-                                <td>
-                                    <input type="number" id="Lng_NroTelefono"/>
-                                    <span class="error" aria-live="polite"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Coodenadas X e Y:</td>
-                                <td>
-                                    <input type="text" id="Txt_Coordenadas"/>
-                                    <span class="error" aria-live="polite"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Categoría:</td>
-                                <td>
-                                    <select type="Text" id="Cbo_Categorias">
-                                        <option disabled selected value="">Seleccione una Categoria</option>
-                                        <option>Comercial</option>
+                <div class="modal-body">
+                    <table hidden="hidden" id="FilaMensaje">
+                        <tr>
+                            <td colspan="2">
+                                <input type="text" id="Txt_error" class="error" aria-live="polite" size="150" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                Nombre:
+                            </td>
+                            <td>
+                                <input type="text" id="Txt_Nombre" maxlength="100" size="100"/>
+                                <span id="SpanTxt_Nombre" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dirección:</td>
+                            <td>
+                                <input type="text" id="Txt_Direccion" maxlength="150"  size="100"/>
+                                <span id="SpanTxt_Direccion" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Número telefónico:</td>
+                            <td>
+                                <input type="number" id="Lng_NroTelefono"/>
+                                <span id="SpanLng_NroTelefono" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Coodenadas X e Y:</td>
+                            <td>
+                                <input type="text" id="Txt_Coordenadas"/>
+                                <span id="SpanTxt_Coordenadas" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Categoría:</td>
+                            <td>
+                                <select type="Text" id="Cbo_Categorias">
+                                    <option disabled selected value="">Seleccione una Categoria</option>
+                                    @*<option>Comercial</option>
                                         <option>Residencial</option>
-                                        <option>Mixta</option>
-                                    </select>
-                                    <span class="error" aria-live="polite"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <input type="hidden" name="Error" />
-                                </td>
-                            </tr>
-                        </table>
+                                        <option>Mixta</option>*@
+                                </select>
+                                <span id="SpanCbo_Categorias" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                    </table>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <input type="submit" class="btn btn-primary" name="BtnGuardarPOI" value="send">
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer" id="div_Botones">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-primary" id="Btn_GuardarPOI" value="Guardar">
+                </div>
             </div>
         </div>
     </div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" style="float: left; position: absolute; margin: 60px 100px; z-index: 1500;">
+        Listar POIs
+    </button>
+
+    <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="PuntosDeInteres">Puntos de Interés</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="SeleccionPOI">
+                        <tr>
+                            <td>
+                                Seleccione el punto de interés a modificar o borrar:
+                            </td>
+                            <td>
+                                <select type="Text" id="Cbo_Pois" onchange="SelecciondDePOI()">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr hidden="hidden" id="FilaBotones">
+                            <td>
+                                <button type="button" class="btn btn-secondary" id="Btn_BorrarPOI">Borrar</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-secondary" id="Btn_ModificarPOI">Modificar</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <table hidden="hidden" id="FilaMensajeList">
+                        <tr >
+                            <td colspan="2">
+                                <input type="text" id="Txt_errorList" class="error" aria-live="polite" size="150" />
+                            </td>
+                        </tr>
+                    </table>
+                     <table hidden="hidden" id="CuerpoPOI">
+                        <tr>
+                            <td>
+                                Nombre:
+                            </td>
+                            <td>
+                                <input type="text" id="Txt_NombreList" maxlength="100"  size="100"/>
+                                <span id="SpanTxt_NombreList" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dirección:</td>
+                            <td>
+                                <input type="text" id="Txt_DireccionList" maxlength="150"  size="100"/>
+                                <span id="SpanTxt_DireccionList" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Número telefónico:</td>
+                            <td>
+                                <input type="number" id="Lng_NroTelefonoList"/>
+                                <span id="SpanLng_NroTelefonoList" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Coodenadas X e Y:</td>
+                            <td>
+                                <input type="text" id="Txt_CoordenadasList"/>
+                                <span  id="SpanTxt_CoordenadasList" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Categoría:</td>
+                            <td>
+                                <select type="Text" id="Cbo_CategoriasList">
+                                    <option disabled selected value="">Seleccione una Categoria</option>
+                                </select>
+                                <span id="SpanCbo_CategoriasList" class="error" aria-live="polite"></span>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer" hidden="hidden" id="divBotones">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="Btn_CancelarList">Cancelar</button>
+                    <input type="submit" class="btn btn-primary" id="Btn_GuardarPOIList" value="Guardar" hidden="hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-
-
 
 @section scripts {
     <script src="https://js.arcgis.com/3.31/"></script>

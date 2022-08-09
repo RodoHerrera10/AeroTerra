@@ -13,8 +13,8 @@ namespace Asa.DataStore
     {
         public OleDbConnection Connect(string fileName)
         {
-            //return new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + "; Jet OLEDB:Engine Type=5;Extended Properties=\"Excel 8.0;\"");
-             return new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + ";Extended Properties=Excel 12.0;");
+            return new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + "; Jet OLEDB:Engine Type=5;Extended Properties=\"Excel 8.0;\"");
+            //return new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + ";Extended Properties=Excel 12.0;");
         }
 
 
@@ -81,6 +81,60 @@ namespace Asa.DataStore
             }
         }
 
+        public void UpdateData(OleDbConnection connection, string table, List<string> columnNames, List<string> theValues)
+        {
+            OleDbCommand command = null;
+
+            try
+            {
+                string UpdateBody = "";
+                for (int index = 1; index < columnNames.Count; index++)
+                {
+
+                    UpdateBody+= "[" + Regex.Replace(columnNames[index], @"\t|\n|\r", "\"") + "] = '" + Regex.Replace(theValues[index], @"\t|\n|\r", "\"") + "',";
+                }
+                
+                UpdateBody = UpdateBody.Substring(0, UpdateBody.Length - 1);
+
+                string UpdateSQL = "Update [" + table + "$] Set ";
+                string UpdateWhere = " Where [" + columnNames[0] + "] = '" + theValues[0] + "'";
+
+
+                using (command = connection.CreateCommand())
+                {
+                    command.CommandText = UpdateSQL + UpdateBody + UpdateWhere;
+
+                    command.ExecuteNonQuery();
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new XlsDriverException("Error on update.", ex);
+            }
+        }
+        public void DeleteData(OleDbConnection connection, string table, string columnId, string valueId)
+        {
+            OleDbCommand command = null;
+
+            try
+            {
+                using (command = connection.CreateCommand())
+                {
+                    command.CommandText = "Delete From [" + table + "$] Where [" + columnId + "] = '" + valueId + "'";
+
+                    //Como no se pueden borrar los datos por utilizar una base ISAM, hago de cuenta que la eliminación 
+                    //ha sido correcta y no ejecuto el comando.
+                    //command.ExecuteNonQuery();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new XlsDriverException("Error on update.", ex);
+            }
+        }
         public class XlsDriverException : Exception
         {
             public XlsDriverException(string message) : base(message)
