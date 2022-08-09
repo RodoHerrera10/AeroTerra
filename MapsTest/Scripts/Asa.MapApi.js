@@ -64,14 +64,6 @@ mapApp.initMap(function () {
     });
 });
 
-function IndicarPOI(event) {
-    var coordenadas = event.latlng.toString();
-    coordenadas = coordenadas.substr(0, coordenadas.length - 1);
-    coordenadas = coordenadas.split(",");
-    //document.getElementById("coord").value = coord[0] + "," + coord[1];
-};
-
-
 /*Cargo el combo Categorías para el Form Modal de Alta de POI*/
 $('#formModal').on('show.bs.modal', function (e) {
     CargarCategorias("#Cbo_Categorias");
@@ -161,8 +153,11 @@ function CargarCategorias(combo) {
 }
 
 function SelecciondDePOI() {
-    var filaMensaje = document.getElementById('FilaMensaje');
+    var filaMensaje = document.getElementById('FilaMensajeList');
     filaMensaje.style.display = "none";
+
+    var txtError = document.getElementById('Txt_errorList');
+    txtError.value = "";
 
     var comboPois = document.getElementById('Cbo_Pois');
 
@@ -281,10 +276,6 @@ $('#Btn_BorrarPOI').on('click', function (event) {
     }).then(function (resultado) {
         if (resultado.isvalid == true) {
             MostrarMensajeError('Se ha borrado el Punto de Interés seleccionado.', 'M')
-            var filaBotones = document.getElementById('FilaBotones');
-            filaBotones.style.display = "none";
-            var comboPOIs = document.getElementById('Cbo_Pois');
-            comboPOIs.textContent='';
             InicioVariablesListModal();
         }
         else {
